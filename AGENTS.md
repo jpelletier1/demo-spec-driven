@@ -12,3 +12,7 @@
 
 ## Verification
 - `python -m py_compile .github/openhands/runner.py`
+
+## Spec workflow patterns
+- Feature specs live under `.specify/specs/<issue-number>-<slug>/spec.md`.
+- Existing product-spec precedent for user administration: `.specify/specs/006-feat-user-management-page/spec.md`.
