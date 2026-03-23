@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>📝 Todo App</h1>
+        </header>
+
+        <main class="app-main">
+            <form class="todo-form" id="todo-form" aria-label="Add new todo">
+                <label for="todo-input" class="visually-hidden">What needs to be done?</label>
+                <input 
+                    type="text" 
+                    id="todo-input" 
+                    class="todo-input" 
+                    placeholder="What needs to be done?" 
+                    autocomplete="off"
+                    required
+                >
+                <button type="submit" class="btn btn-primary" aria-label="Add todo">Add</button>
+            </form>
+
+            <section class="todo-section" aria-label="Todo list">
+                <ul class="todo-list" id="todo-list" role="list" aria-live="polite">
+                </ul>
+
+                <div class="empty-state" id="empty-state" hidden>
+                    <p>No todos yet. Add one above!</p>
+                </div>
+            </section>
+
+            <footer class="todo-footer" id="todo-footer">
+                <div class="filter-buttons" role="group" aria-label="Filter todos">
+                    <button class="btn btn-filter active" data-filter="all" aria-pressed="true">All</button>
+                    <button class="btn btn-filter" data-filter="active" aria-pressed="false">Active</button>
+                    <button class="btn btn-filter" data-filter="completed" aria-pressed="false">Completed</button>
+                </div>
+
+                <div class="todo-stats">
+                    <span id="items-left" class="items-left">0 items left</span>
+                </div>
+
+                <button class="btn btn-danger" id="clear-all-btn" aria-label="Clear all todos">
+                    Clear All
+                </button>
+            </footer>
+        </main>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
