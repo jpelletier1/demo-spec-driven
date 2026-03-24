@@ -16,3 +16,7 @@
 ## Spec workflow patterns
 - Feature specs live under `.specify/specs/<issue-number>-<slug>/spec.md`.
 - Existing product-spec precedent for user administration: `.specify/specs/006-feat-user-management-page/spec.md`.
+
+## Repository constraints
+- The repo currently contains workflow automation, generated specs, README content, and `presentation.html`, but no standalone product application or auth stack.
+- Issue #11 planning assumes any eventual user-management implementation will need to introduce a self-contained app surface rather than extending the slide deck alone.
