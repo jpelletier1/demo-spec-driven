@@ -21,4 +21,5 @@
 - Entry point: `src/server.js`.
 - Database module: `src/db.js`, storing local data in `data/payroll.sqlite`.
 - Renderer and styling: `src/render.js` and `src/public/styles.css`.
+- Form validation for employee create/update flows is centralized in `parseEmployeeInput()` in `src/server.js`.
 - The database seeds 6 employee records on first run.
