@@ -19,16 +19,17 @@ Adding phone number capture to the payroll app keeps employee contact details in
 
 ### Must Have
 
-- [ ] **Phone field on create**: The add-employee workflow includes a phone number field labeled `Phone`
-- [ ] **Phone field on update**: Existing employee records can be edited to add or change the stored phone number
+- [ ] **Required phone field on create**: The add-employee workflow includes a required phone number field labeled `Phone`
+- [ ] **Required phone field on update**: Existing employee records can be edited to add or change the stored phone number, and saving an employee record requires a phone number
 - [ ] **Phone value persistence**: The employee record stores the phone number as part of the payroll profile and retains it across page reloads and app restarts
-- [ ] **Validation**: The app rejects phone numbers that exceed 10 digits
-- [ ] **Validation feedback**: When a phone number is rejected, the payroll admin receives a clear message explaining the validation failure
-- [ ] **Visibility**: Stored phone numbers are shown in the payroll app wherever employee contact details are managed so admins can reference them after saving
+- [ ] **Digits-only validation**: The app accepts phone numbers composed of digits only
+- [ ] **Length validation**: The app rejects phone numbers that exceed 10 digits
+- [ ] **Validation feedback**: When a phone number is missing or invalid, the payroll admin receives a clear message explaining the validation failure
+- [ ] **Visibility across the app**: Stored phone numbers are shown in employee forms, the roster table, and API responses so admins can reference them after saving
 
 ### Should Have
 
-- [ ] **Graceful handling of existing records**: Existing employee records without a phone number continue to load and remain editable
+- [ ] **Graceful handling of existing records**: Existing employee records without a phone number continue to load, display a blank phone field, and remain editable until an admin fills in the value
 - [ ] **Consistent presentation**: The app presents phone numbers consistently wherever they are displayed in the interface
 
 ### Nice to Have
@@ -38,13 +39,14 @@ Adding phone number capture to the payroll app keeps employee contact details in
 
 ## Acceptance Criteria
 
-- [ ] Verify the add employee form includes a `Phone` field
+- [ ] Verify the add employee form includes a required `Phone` field
 - [ ] Verify each employee edit form includes a `Phone` field populated with the current saved value, when present
-- [ ] Verify a payroll admin can save a valid phone number and see it later in the payroll app
+- [ ] Verify a payroll admin can save a valid digits-only phone number and see it in the employee forms, roster table, and API responses
 - [ ] Verify a payroll admin can update an existing employee phone number
-- [ ] Verify the approved optional-or-required behavior for blank phone values is enforced consistently for new and existing records
+- [ ] Verify submitting a blank phone number for a create or update request does not save the change and shows a clear validation message
+- [ ] Verify submitting non-digit characters in the phone field does not save the change and shows a clear validation message
 - [ ] Verify submitting a phone number longer than 10 digits does not save the change and shows a clear validation message
-- [ ] Verify existing employee records created before this feature still render successfully
+- [ ] Verify existing employee records created before this feature still render successfully with a blank phone field until manually updated
 
 ## Out of Scope
 
@@ -58,7 +60,4 @@ The following are explicitly not part of this feature:
 
 ## Open Questions
 
-1. Should the phone number be required for new employees, or should it remain optional?
-2. Should the app accept only digits, or should it also allow formatting characters such as spaces, dashes, or parentheses as long as the total digit count does not exceed 10?
-3. Where should the saved phone number be visible after entry: only in employee forms, in the roster table, in API responses, or all of the above?
-4. For existing employee records that already exist without phone numbers, should the field remain blank until manually filled in, or is any backfill/default behavior expected?
+None at this time.
