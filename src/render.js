@@ -30,6 +30,31 @@ function renderManagerOptions(employees, selectedManagerId = null, excludeId = n
   return options.join('');
 }
 
+function renderPhoneDisplay(phone) {
+  if (!phone) {
+    return '<span class="muted">Not provided</span>';
+  }
+
+  return escapeHtml(phone);
+}
+
+function renderPhoneInput(phone = '') {
+  return `
+    <label>
+      <span>Phone</span>
+      <input
+        type="text"
+        name="phone"
+        value="${escapeHtml(phone)}"
+        inputmode="numeric"
+        maxlength="10"
+        pattern="[0-9]+"
+        required
+      />
+    </label>
+  `;
+}
+
 function renderEmployeeRows(employees) {
   return employees
     .map(
@@ -42,6 +67,7 @@ function renderEmployeeRows(employees) {
             </div>
           </td>
           <td>${escapeHtml(employee.title)}</td>
+          <td>${renderPhoneDisplay(employee.phone)}</td>
           <td>${currencyFormatter.format(employee.salary)}</td>
           <td>${employee.managerName ? escapeHtml(employee.managerName) : '<span class="muted">Unassigned</span>'}</td>
           <td>${escapeHtml(employee.homeAddress)}</td>
@@ -64,6 +90,7 @@ function renderEmployeeCards(employees) {
             <div class="employee-card-meta">
               <span>${currencyFormatter.format(employee.salary)}</span>
               <span>${employee.managerName ? `Manager: ${escapeHtml(employee.managerName)}` : 'No manager assigned'}</span>
+              <span>Phone: ${employee.phone ? escapeHtml(employee.phone) : 'Not provided'}</span>
             </div>
           </summary>
           <form method="post" action="/employees/${employee.id}/update" class="employee-form">
@@ -76,6 +103,7 @@ function renderEmployeeCards(employees) {
                 <span>Title</span>
                 <input type="text" name="title" value="${escapeHtml(employee.title)}" required />
               </label>
+              ${renderPhoneInput(employee.phone || '')}
               <label>
                 <span>Annual salary</span>
                 <input type="number" name="salary" min="0" step="1000" value="${employee.salary}" required />
@@ -174,6 +202,7 @@ function renderDashboard({ employees, summary, message }) {
                   <span>Title</span>
                   <input type="text" name="title" placeholder="Compensation Analyst" required />
                 </label>
+                ${renderPhoneInput()}
                 <label>
                   <span>Annual salary</span>
                   <input type="number" name="salary" min="0" step="1000" placeholder="85000" required />
@@ -209,6 +238,7 @@ function renderDashboard({ employees, summary, message }) {
                     <tr>
                       <th>Name</th>
                       <th>Title</th>
+                      <th>Phone</th>
                       <th>Salary</th>
                       <th>Manager</th>
                       <th>Home address</th>
@@ -227,7 +257,7 @@ function renderDashboard({ employees, summary, message }) {
                   <p class="eyebrow">Manage profiles</p>
                   <h2>Edit employee records</h2>
                 </div>
-                <p class="subtle">Expand a card to update salary, title, address, manager, or remove the employee from payroll.</p>
+                <p class="subtle">Expand a card to update salary, title, phone, address, manager, or remove the employee from payroll.</p>
               </div>
               <div class="cards-grid">
                 ${renderEmployeeCards(employees)}
