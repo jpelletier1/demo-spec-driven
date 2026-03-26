@@ -90,31 +90,6 @@ Any unresolved questions that need human input.
 - Add `spec-ready` label when done
 - Post clarifying questions as a comment on the issue
 
-## Clarifying Questions
-
-After creating the initial spec draft, post a comment on the issue with clarifying questions. This helps refine the requirements. Include:
-
-1. **3-5 thoughtful questions** about ambiguous aspects of the request
-2. **A link to the conversation** so users can provide detailed responses
-3. Questions should focus on:
-   - Unclear requirements or edge cases
-   - User experience expectations
-   - Integration with existing features
-   - Priority of different aspects
-
-Example comment format:
-```markdown
-## 📋 Initial Spec Created
-
-I've created an initial specification based on the issue description. You can find it here: [spec.md](https://github.com/{repository}/blob/{feature_branch}/{spec_directory}/spec.md)
-
-## ❓ Clarifying Questions
-
-[ Post a bulleted list of clarifying questions ]
-
-Your answers will help me refine the spec before moving to the planning phase.
-```
-
 ## Responding to Feedback
 
 If users provide responses in the conversation:
@@ -126,6 +101,7 @@ If users provide responses in the conversation:
 
 When the spec step is complete, post a new issue comment with the details of the step. Include:
 
+- A link to the conversation (a link can be found in the previous comment)
 - The feature branch you used
 - The path to `{spec_directory}/spec.md` as a hyperlink
 - Confirmation that `spec-ready` was added
@@ -153,6 +129,8 @@ Example format:
 
 - [Question 1]
 - [Question 2]
+
+Provide your responses: {link to conversation}
 
 **Next Step:** Review the spec, answer any open questions, then add the `spec-approved` label to proceed to planning.
 ```
