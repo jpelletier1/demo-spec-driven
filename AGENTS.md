@@ -21,4 +21,9 @@
 - Entry point: `src/server.js`.
 - Database module: `src/db.js`, storing local data in `data/payroll.sqlite`.
 - Renderer and styling: `src/render.js` and `src/public/styles.css`.
+- Form validation for employee create/update flows is centralized in `parseEmployeeInput()` in `src/server.js`.
 - The database seeds 6 employee records on first run.
+- Tests run with `npm test` using Node's built-in test runner plus `supertest`.
+- `PAYROLL_DB_PATH` can point the app at an alternate SQLite file for isolated integration tests.
+- `src/db.js` performs a startup migration that adds a missing `phone` column with `PRAGMA table_info(employees)` and `ALTER TABLE`.
+

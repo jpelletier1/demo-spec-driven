@@ -10,11 +10,7 @@ const {
 } = require('./db');
 const { renderDashboard } = require('./render');
 
-const app = express();
 const port = Number.parseInt(process.env.PORT || '3000', 10);
-
-app.use(express.urlencoded({ extended: false }));
-app.use('/static', express.static(path.join(__dirname, 'public')));
 
 function redirectWithMessage(res, message) {
   res.redirect(`/?message=${encodeURIComponent(message)}`);
@@ -28,6 +24,7 @@ function parseId(value) {
 function parseEmployeeInput(body, employeeId = null) {
   const name = typeof body.name === 'string' ? body.name.trim() : '';
   const title = typeof body.title === 'string' ? body.title.trim() : '';
+  const phone = typeof body.phone === 'string' ? body.phone.trim() : '';
   const homeAddress = typeof body.homeAddress === 'string' ? body.homeAddress.trim() : '';
   const salary = Number.parseInt(String(body.salary || ''), 10);
   const managerId = body.managerId ? parseId(body.managerId) : null;
@@ -38,6 +35,18 @@ function parseEmployeeInput(body, employeeId = null) {
 
   if (!title) {
     throw new Error('Employee title is required.');
+  }
+
+  if (!phone) {
+    throw new Error('Phone number is required.');
+  }
+
+  if (!/^\d+$/.test(phone)) {
+    throw new Error('Phone number must contain digits only.');
+  }
+
+  if (phone.length > 10) {
+    throw new Error('Phone number must not exceed 10 digits.');
   }
 
   if (!homeAddress) {
@@ -59,70 +68,82 @@ function parseEmployeeInput(body, employeeId = null) {
   return {
     name,
     title,
+    phone,
     salary,
     homeAddress,
     managerId,
   };
 }
 
-app.get('/', (req, res) => {
-  const message = typeof req.query.message === 'string' ? req.query.message : '';
-  const employees = listEmployees();
-  const summary = getSummary();
+function createApp() {
+  const app = express();
 
-  res.type('html').send(renderDashboard({ employees, summary, message }));
-});
+  app.use(express.urlencoded({ extended: false }));
+  app.use('/static', express.static(path.join(__dirname, 'public')));
 
-app.get('/health', (req, res) => {
-  res.json({
-    status: 'ok',
-    employeeCount: listEmployees().length,
+  app.get('/', (req, res) => {
+    const message = typeof req.query.message === 'string' ? req.query.message : '';
+    const employees = listEmployees();
+    const summary = getSummary();
+
+    res.type('html').send(renderDashboard({ employees, summary, message }));
   });
-});
 
-app.get('/api/employees', (req, res) => {
-  res.json({
-    employees: listEmployees(),
-    summary: getSummary(),
+  app.get('/health', (req, res) => {
+    res.json({
+      status: 'ok',
+      employeeCount: listEmployees().length,
+    });
   });
-});
 
-app.post('/employees', (req, res) => {
-  try {
-    const employee = parseEmployeeInput(req.body);
-    createEmployee(employee);
-    redirectWithMessage(res, `${employee.name} added to payroll.`);
-  } catch (error) {
-    redirectWithMessage(res, error.message || 'Unable to add employee.');
-  }
-});
+  app.get('/api/employees', (req, res) => {
+    res.json({
+      employees: listEmployees(),
+      summary: getSummary(),
+    });
+  });
 
-app.post('/employees/:id/update', (req, res) => {
-  const employeeId = parseId(req.params.id);
+  app.post('/employees', (req, res) => {
+    try {
+      const employee = parseEmployeeInput(req.body);
+      createEmployee(employee);
+      redirectWithMessage(res, `${employee.name} added to payroll.`);
+    } catch (error) {
+      redirectWithMessage(res, error.message || 'Unable to add employee.');
+    }
+  });
 
-  if (!employeeId || !employeeExists(employeeId)) {
-    return redirectWithMessage(res, 'Employee record could not be found.');
-  }
+  app.post('/employees/:id/update', (req, res) => {
+    const employeeId = parseId(req.params.id);
 
-  try {
-    const employee = parseEmployeeInput(req.body, employeeId);
-    updateEmployee(employeeId, employee);
-    return redirectWithMessage(res, `${employee.name}'s profile was updated.`);
-  } catch (error) {
-    return redirectWithMessage(res, error.message || 'Unable to update employee.');
-  }
-});
+    if (!employeeId || !employeeExists(employeeId)) {
+      return redirectWithMessage(res, 'Employee record could not be found.');
+    }
 
-app.post('/employees/:id/delete', (req, res) => {
-  const employeeId = parseId(req.params.id);
+    try {
+      const employee = parseEmployeeInput(req.body, employeeId);
+      updateEmployee(employeeId, employee);
+      return redirectWithMessage(res, `${employee.name}'s profile was updated.`);
+    } catch (error) {
+      return redirectWithMessage(res, error.message || 'Unable to update employee.');
+    }
+  });
 
-  if (!employeeId || !employeeExists(employeeId)) {
-    return redirectWithMessage(res, 'Employee record could not be found.');
-  }
+  app.post('/employees/:id/delete', (req, res) => {
+    const employeeId = parseId(req.params.id);
 
-  const removedEmployee = deleteEmployee(employeeId);
-  return redirectWithMessage(res, `${removedEmployee.name} was removed from payroll.`);
-});
+    if (!employeeId || !employeeExists(employeeId)) {
+      return redirectWithMessage(res, 'Employee record could not be found.');
+    }
+
+    const removedEmployee = deleteEmployee(employeeId);
+    return redirectWithMessage(res, `${removedEmployee.name} was removed from payroll.`);
+  });
+
+  return app;
+}
+
+const app = createApp();
 
 if (require.main === module) {
   app.listen(port, () => {
@@ -131,3 +152,5 @@ if (require.main === module) {
 }
 
 module.exports = app;
+module.exports.createApp = createApp;
+module.exports.parseEmployeeInput = parseEmployeeInput;
