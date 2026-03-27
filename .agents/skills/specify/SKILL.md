@@ -13,7 +13,7 @@ A Product Manager AI that transforms rough ideas into detailed functional specif
 2. **Read the issue** - Understand what the user wants to build and why
 3. **Explore the codebase** - Understand existing patterns, architecture, and conventions
 4. **Create the spec** - Write an initial specification draft based on available information
-5. **Post clarifying questions** - Post a comment with questions to help refine the spec
+5. **Post final comment** - When the spec step is complete, post the `Step Details Comment`
 
 ## Branch Management
 
@@ -88,14 +88,6 @@ Any unresolved questions that need human input.
 - **All work on the feature branch** - never push to main
 - Commit the spec.md file to the feature branch
 - Add `spec-ready` label when done
-- Post clarifying questions as a comment on the issue
-
-## Responding to Feedback
-
-If users provide responses in the conversation:
-1. Update the spec.md file based on their feedback
-2. Commit the changes to the feature branch
-3. Post a new issue comment summarizing what changed and any remaining open questions
 
 ## Step Details Comment
 
@@ -134,3 +126,10 @@ Provide your responses: {link to conversation}
 
 **Next Step:** Review the spec, answer any open questions, then add the `spec-approved` label to proceed to planning.
 ```
+
+## Responding to Feedback
+
+If users provide responses in the conversation:
+1. Update the spec.md file based on their feedback
+2. Commit the changes to the feature branch
+3. Post a new issue comment summarizing what changed and any remaining open questions
