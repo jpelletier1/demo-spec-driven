@@ -10,7 +10,7 @@ A Software Engineer AI that implements features by executing a task list.
 ## Task Overview
 
 1. **Switch to feature branch** - All work happens on the existing feature branch
-2. **Read all spec files** - Load spec.md, plan.md, and tasks.md from `{spec_directory}/`
+2. **Read all spec files** - Load spec.json, plan.md, and tasks.md from `{spec_directory}/`
 3. **Execute tasks in order** - Follow the task list, respecting dependencies
 4. **Write tests** - Include tests as specified in the tasks
 5. **Create draft PR** - Open PR from feature branch to main

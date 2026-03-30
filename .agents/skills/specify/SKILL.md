@@ -1,6 +1,6 @@
 ---
 name: specify
-description: This skill should be used when a new issue is opened and needs a functional specification. It transforms rough feature ideas into detailed spec.md documents with user stories, requirements, and acceptance criteria, while also posting clarifying questions.
+description: This skill should be used when a new issue is opened and needs a functional specification. It transforms rough feature ideas into detailed spec.json documents with user stories, requirements, and acceptance criteria, while also posting clarifying questions.
 ---
 
 # Specify Skill
@@ -29,55 +29,40 @@ A Product Manager AI that transforms rough ideas into detailed functional specif
 
 ## Output Location
 
-Create the specification file at: `{spec_directory}/spec.md`
+Create the specification file at: `{spec_directory}/spec.json`
 
 The `spec_directory` and `feature_branch` are provided in the context.
 
 ## Specification Format
 
-Use this format for the spec.md file:
+Create `spec.json` as structured JSON that matches `.specify/schema/spec.schema.json`.
 
-```markdown
-# Feature: {Issue Title}
-
-> Issue: #{issue_number}
-> Status: Draft
-
-## Problem Statement
-
-What problem does this solve? Why is it needed?
-
-## User Stories
-
-As a [persona], I want [functionality], so that [benefit].
-
-1. As a ... I want ... so that ...
-2. As a ... I want ... so that ...
-
-## Functional Requirements
-
-### Must Have
-- [ ] Requirement 1
-- [ ] Requirement 2
-
-### Should Have
-- [ ] Requirement 3
-
-### Nice to Have
-- [ ] Requirement 4
-
-## Acceptance Criteria
-
-- [ ] Verify ...
-- [ ] Verify ...
-
-## Out of Scope
-
-What this feature does NOT include (to set clear boundaries).
-
-## Open Questions
-
-Any unresolved questions that need human input.
+```json
+{
+  "version": "1.0",
+  "feature": "{Issue Title}",
+  "issue": {
+    "number": {issue_number},
+    "title": "{Issue Title}",
+    "url": "{issue_url}"
+  },
+  "problem_statement": "What problem does this solve and why is it needed?",
+  "user_stories": [
+    {
+      "as_a": "persona",
+      "i_want": "functionality",
+      "so_that": "benefit"
+    }
+  ],
+  "requirements": {
+    "must_have": ["Requirement 1"],
+    "should_have": ["Requirement 2"],
+    "nice_to_have": ["Requirement 3"]
+  },
+  "acceptance_criteria": ["Verify ..."],
+  "out_of_scope": ["Not included ..."],
+  "open_questions": ["Any unresolved question?"]
+}
 ```
 
 ## Rules
@@ -86,7 +71,7 @@ Any unresolved questions that need human input.
 - Preserve the original issue content
 - Be explicit about what's in scope vs out of scope
 - **All work on the feature branch** - never push to main
-- Commit the spec.md file to the feature branch
+- Commit the spec.json file to the feature branch
 - Add `spec-ready` label when done
 
 ## Step Details Comment
@@ -95,7 +80,7 @@ When the spec step is complete, post a new issue comment with the details of the
 
 - A link to the conversation (a link can be found in the previous comment)
 - The feature branch you used
-- The path to `{spec_directory}/spec.md` as a hyperlink
+- The path to `{spec_directory}/spec.json` as a hyperlink
 - Confirmation that `spec-ready` was added
 - A concise summary of the spec scope
 - The clarifying questions that still need answers, if any
@@ -104,8 +89,8 @@ When the spec step is complete, post a new issue comment with the details of the
 **File Links:** All file paths referenced in the comment must be hyperlinks to their location in the branch using this format:
 `https://github.com/{repository}/blob/{feature_branch}/{file_path}`
 
-For example, if `repository` is `acme/demo` and `feature_branch` is `feature/42-add-login`, then `{spec_directory}/spec.md` should link to:
-`https://github.com/acme/demo/blob/feature/42-add-login/.specify/specs/042-add-login/spec.md`
+For example, if `repository` is `acme/demo` and `feature_branch` is `feature/42-add-login`, then `{spec_directory}/spec.json` should link to:
+`https://github.com/acme/demo/blob/feature/42-add-login/.specify/specs/042-add-login/spec.json`
 
 Example format:
 
@@ -113,7 +98,7 @@ Example format:
 ## 🧾 Spec Step Complete
 
 - Created feature branch: `{feature_branch}`
-- Created specification at [`{spec_directory}/spec.md`](https://github.com/{repository}/blob/{feature_branch}/{spec_directory}/spec.md)
+- Created specification at [`{spec_directory}/spec.json`](https://github.com/{repository}/blob/{feature_branch}/{spec_directory}/spec.json)
 - Added `spec-ready` label
 - **Scope summary:** [Brief summary]
 
@@ -130,6 +115,6 @@ Provide your responses: {link to conversation}
 ## Responding to Feedback
 
 If users provide responses in the conversation:
-1. Update the spec.md file based on their feedback
+1. Update the spec.json file based on their feedback
 2. Commit the changes to the feature branch
 3. Post a new issue comment summarizing what changed and any remaining open questions

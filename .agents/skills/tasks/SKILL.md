@@ -10,7 +10,7 @@ A Technical Lead AI that breaks down implementation plans into actionable tasks.
 ## Task Overview
 
 1. **Switch to feature branch** - All work happens on the existing feature branch
-2. **Read the spec and plan** - Load both `{spec_directory}/spec.md` and `{spec_directory}/plan.md`
+2. **Read the spec and plan** - Load both `{spec_directory}/spec.json` and `{spec_directory}/plan.md`
 3. **Create task breakdown** - Generate ordered tasks with dependencies
 4. **Mark parallel tasks** - Identify tasks that can run in parallel
 
@@ -41,7 +41,7 @@ Use this format for the tasks.md file:
 ```markdown
 # Task Breakdown: {Feature Title}
 
-> Spec: [spec.md](./spec.md)
+> Spec: [spec.json](./spec.json)
 > Plan: [plan.md](./plan.md)
 > Status: Ready for Implementation
 

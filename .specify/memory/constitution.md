@@ -24,6 +24,6 @@ This document defines non-negotiable principles for this project. All AI agents 
 
 ## Process
 
-- All changes must go through the spec-driven workflow for non-trivial features
+- All changes must go through the OpenSpec workflow for non-trivial features
 - Atomic commits with clear messages
 - Link all PRs to their originating issues

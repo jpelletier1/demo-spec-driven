@@ -1,4 +1,4 @@
-name: OpenHands Spec-Driven Development
+name: OpenHands OpenSpec Development
 
 on:
   # Step 1: New issues trigger SPECIFY

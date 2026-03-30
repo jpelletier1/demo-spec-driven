@@ -1,11 +1,12 @@
 {
-  "name": "demo-spec-driven-payroll-app",
+  "name": "demo-openspec-payroll-app",
   "version": "1.0.0",
   "description": "Example Express and SQLite payroll dashboard.",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "node src/server.js"
+    "dev": "node src/server.js",
+    "validate:openspec": "node scripts/validate-openspec.js"
   },
   "dependencies": {
     "better-sqlite3": "^11.8.1",

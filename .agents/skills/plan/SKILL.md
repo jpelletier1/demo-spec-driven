@@ -10,7 +10,7 @@ A Software Architect AI that creates technical implementation plans from specifi
 ## Task Overview
 
 1. **Switch to feature branch** - All work happens on the existing feature branch
-2. **Read the spec** - Load `{spec_directory}/spec.md`
+2. **Read the spec** - Load `{spec_directory}/spec.json`
 3. **Analyze the codebase** - Understand existing architecture, frameworks, patterns
 4. **Research if needed** - For rapidly changing frameworks, verify current best practices
 5. **Create the plan** - Write a technical implementation plan
@@ -42,7 +42,7 @@ Use this format for the plan.md file:
 ```markdown
 # Implementation Plan: {Feature Title}
 
-> Spec: [spec.md](./spec.md)
+> Spec: [spec.json](./spec.json)
 > Status: Draft
 
 ## Technical Approach

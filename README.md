@@ -1,22 +1,23 @@
-# Spec-Driven Development with OpenHands
+# OpenSpec Development with OpenHands
 
-A GitHub-native workflow for automating the journey from idea to merged PR using OpenHands Cloud agents.
+A GitHub-native workflow for automating the journey from issue to draft PR using OpenHands Cloud agents and structured OpenSpec artifacts.
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
-1. An OpenHands Cloud account with API key
-2. Repository secrets configured
+1. An OpenHands Cloud account and API key
+2. A GitHub repository with Actions enabled
+3. Repository secrets configured
 
 ### Setup
 
-1. **Add the Secret**
-   - Go to **Settings → Secrets and variables → Actions**
+1. **Add required repository secret**
+   - Go to **Settings -> Secrets and variables -> Actions**
    - Add `OPENHANDS_API_KEY` with your OpenHands Cloud API key
 
-2. **Create Required Labels**
-   
+2. **Create required labels**
+
    | Label | Color | Description |
    |-------|-------|-------------|
    | `spec-approved` | `#0E8A16` | Spec is approved, ready for planning |
@@ -27,94 +28,145 @@ A GitHub-native workflow for automating the journey from idea to merged PR using
    | `plan-ready` | `#1D76DB` | Plan draft is ready for review |
    | `tasks-ready` | `#1D76DB` | Tasks draft is ready for review |
 
-3. **Use the Workflow**
-   - Create an issue with your feature idea
-   - Agent creates `spec.md` → adds `spec-ready` label
-   - Review and add `spec-approved` label
-   - Agent creates `plan.md` → adds `plan-ready` label
-   - Review and add `plan-approved` label
-   - Agent creates `tasks.md` → adds `tasks-ready` label
-   - Review and add `ready-to-implement` label
-   - Agent implements code → creates draft PR
-   - Review PR → Agent responds to feedback
+3. **Enable workflows**
+   - `.github/workflows/openhands-agent.yml` routes issue/label/review events to skills
+   - `.github/workflows/validate-openspec.yml` validates `spec.json` artifacts
 
-## ✨ Features
+4. **Use the workflow**
+   - Create an issue with your feature idea
+   - Agent creates `spec.json` -> adds `spec-ready`
+   - Review and add `spec-approved`
+   - Agent creates `plan.md` -> adds `plan-ready`
+   - Review and add `plan-approved`
+   - Agent creates `tasks.md` -> adds `tasks-ready`
+   - Review and add `ready-to-implement`
+   - Agent implements and opens a draft PR
+
+## Local Demo (Live Run)
+
+Use these commands to demo the app and OpenSpec validation locally.
+
+### 1) Install dependencies
+
+```bash
+npm install
+```
+
+### 2) Validate OpenSpec artifacts
+
+```bash
+npm run validate:openspec
+```
+
+Expected output includes:
+
+```text
+Validated 1 OpenSpec file(s) successfully.
+```
+
+### 3) Start the payroll dashboard
+
+```bash
+PORT=13001 npm start
+```
+
+### 4) Verify health endpoint
+
+```bash
+curl http://127.0.0.1:13001/health
+```
+
+Expected response on fresh data:
+
+```json
+{"status":"ok","employeeCount":6}
+```
+
+### 5) Verify employee API
+
+```bash
+curl http://127.0.0.1:13001/api/employees
+```
+
+Expected response: JSON with `employees` and `summary` keys.
+
+### 6) Open UI
+
+Visit `http://127.0.0.1:13001/` in your browser.
+
+## Features
 
 ### Feature Branch Workflow
 
-All work for an issue happens on a dedicated feature branch - never directly on main:
+All work for an issue happens on a dedicated feature branch (never directly on `main`):
 
-1. When a new issue is opened, a feature branch is created: `feature/{issue_number}-{slug}`
-2. Specs, plans, tasks, and implementation all commit to this branch
-3. Only when implementation is complete does a PR get opened to merge into main
-4. This ensures main stays clean and all changes go through review
+1. New issue creates a branch: `feature/{issue_number}-{slug}`
+2. Spec, plan, task artifacts, and implementation commits go to that branch
+3. Implementation opens a draft PR into `main`
+4. Main remains protected by review
 
 ### Step Comments
 
-When a new issue is opened or a label triggers a workflow step, the agent automatically posts a step-specific acknowledgement comment:
+When a new issue is opened or a label triggers a workflow step, the agent posts an acknowledgement comment:
 
 > OK, working on `spec`. [Track my progress here](conversation link).
 
-After each step finishes (spec, plan, task, implement), the agent posts a new issue comment with that step's details and the next steps instead of editing the earlier acknowledgement comment.
+After each step completes (`spec`, `plan`, `task`, `implement`), the agent posts a new issue comment with step details and next steps.
 
-### Clarifying Questions
+## Project Structure
 
-When a new issue is created, the agent:
-1. Creates an initial spec draft based on the issue description
-2. Posts clarifying questions as a comment to help refine requirements
-3. Provides a link to the conversation for detailed discussion
-4. Updates the spec based on responses in the conversation
-
-## 📁 Project Structure
-
-```
+```text
 .agents/
-└── skills/                     # Agent skills (OpenHands Skills format)
-    ├── specify/SKILL.md        # Step 1: Create specification
-    ├── plan/SKILL.md           # Step 2: Technical planning
-    ├── tasks/SKILL.md          # Step 3: Task breakdown
-    ├── implement/SKILL.md      # Step 4: Code generation
-    └── pr-responder/SKILL.md   # Step 5: PR review response
+└── skills/
+    ├── specify/SKILL.md
+    ├── plan/SKILL.md
+    ├── tasks/SKILL.md
+    ├── implement/SKILL.md
+    └── pr-responder/SKILL.md
 
 .github/
 ├── workflows/
-│   └── openhands-agent.yml     # GitHub Actions workflow
+│   ├── openhands-agent.yml
+│   └── validate-openspec.yml
 └── openhands/
-    └── runner.py               # Event routing script
+    └── runner.py
 
 .specify/
 ├── memory/
-│   └── constitution.md         # Project principles
-└── specs/                      # Generated specifications
+│   └── constitution.md
+├── schema/
+│   └── spec.schema.json
+└── specs/
     └── <issue-number>-<feature>/
-        ├── spec.md
+        ├── spec.json
         ├── plan.md
         └── tasks.md
+
+scripts/
+└── validate-openspec.js
 ```
 
-## 🔄 Workflow Steps
+## Workflow Steps
 
 | Step | Trigger | Skill | Output |
 |------|---------|-------|--------|
-| 1. Specify | Issue opened | `specify` | `.specify/specs/<id>/spec.md` |
+| 1. Specify | Issue opened | `specify` | `.specify/specs/<id>/spec.json` |
 | 2. Plan | `spec-approved` label | `plan` | `.specify/specs/<id>/plan.md` |
 | 3. Tasks | `plan-approved` label | `tasks` | `.specify/specs/<id>/tasks.md` |
 | 4. Implement | `ready-to-implement` label | `implement` | Draft PR |
 | 5. Refine | PR review submitted | `pr-responder` | Updated PR |
 
-## 🛠️ Customization
+## Customization
 
 ### Skills
 
-Skills are stored in `.agents/skills/` using the [OpenHands Agent Skills format](https://docs.openhands.dev/overview/skills). Each skill is a directory containing:
-
-- `SKILL.md` - Main skill file with YAML frontmatter and instructions
-- Optional: `references/`, `scripts/`, `assets/` directories
+Skills are stored in `.agents/skills/` using the [OpenHands Skills format](https://docs.openhands.dev/overview/skills).
 
 ### Constitution
 
-The project constitution at `.specify/memory/constitution.md` defines non-negotiable principles that all agents must follow.
+The constitution in `.specify/memory/constitution.md` defines non-negotiable engineering and process rules.
 
-## 📖 Learn More
+## Learn More
 
-See the full [Spec-Driven Development Workflow](https://github.com/github/spec-kit) methodology for more details
+- OpenHands Skills: https://docs.openhands.dev/overview/skills
+- Spec Kit / OpenSpec methodology: https://github.com/github/spec-kit
